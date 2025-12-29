@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get 'dashboard/index'
+  end
   get 'home/index'
   devise_for :users, controllers: {
     omniauth_callbacks: 'users/omniauth_callbacks'
@@ -10,6 +13,24 @@ Rails.application.routes.draw do
   post 'saml/acs',      to: 'saml#acs'
   post 'saml/slo',      to: 'saml#slo'
   get  'saml/slo',      to: 'saml#slo'
+
+  namespace :admin do
+    root 'dashboard#index'
+    
+    resources :service_providers do
+      member do
+        patch :toggle_status
+      end
+    end
+    
+    resources :users
+    
+    resources :audit_logs, only: [:index, :show] do
+      collection do
+        get :export
+      end
+    end
+  end
 
   root to: "home#index"
 end

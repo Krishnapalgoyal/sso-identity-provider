@@ -1,0 +1,64 @@
+<!-- app/views/layouts/admin.html.erb -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin - SSO Identity Provider</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="<%= admin_root_path %>">SSO Admin</a>
+        
+        <div class="navbar-nav ms-auto">
+          <span class="navbar-text me-3">
+            <%= current_user.full_name %> (<%= current_organization.name %>)
+          </span>
+          <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-outline-light btn-sm" %>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-md-block bg-light sidebar">
+          <div class="position-sticky pt-3">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <%= link_to "Dashboard", admin_root_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Service Providers", admin_service_providers_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Users", admin_users_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Audit Logs", admin_audit_logs_path, class: "nav-link" %>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-10 ms-sm-auto px-md-4">
+          <% if notice %>
+            <div class="alert alert-success mt-3"><%= notice %></div>
+          <% end %>
+          
+          <% if alert %>
+            <div class="alert alert-danger mt-3"><%= alert %></div>
+          <% end %>
+
+          <%= yield %>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
