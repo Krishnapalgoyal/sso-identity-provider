@@ -26,7 +26,7 @@ group :test do
 end
 
 gem 'devise'
-# gem 'apartment'
+gem 'acts_as_tenant' 
 gem 'ruby-saml'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
