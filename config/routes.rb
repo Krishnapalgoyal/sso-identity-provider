@@ -32,5 +32,15 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do
+    namespace :v1 do
+      resources :service_providers
+      resources :users
+      
+      # API info endpoint
+      get 'info', to: 'info#show'
+    end
+  end
+
   root to: "home#index"
 end
