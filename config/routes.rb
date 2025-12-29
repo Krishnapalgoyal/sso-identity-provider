@@ -5,5 +5,11 @@ Rails.application.routes.draw do
   }
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
+  get  'saml/metadata', to: 'saml#metadata'
+  post 'saml/auth',     to: 'saml#auth'
+  post 'saml/acs',      to: 'saml#acs'
+  post 'saml/slo',      to: 'saml#slo'
+  get  'saml/slo',      to: 'saml#slo'
+
   root to: "home#index"
 end
