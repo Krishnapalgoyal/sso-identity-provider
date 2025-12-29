@@ -33,6 +33,7 @@ gem 'omniauth-rails_csrf_protection'
 gem 'pundit'
 gem 'kaminari'
 gem 'searchkick'
+gem 'elasticsearch', '~> 7.17'  # Add this line
 gem 'sidekiq'
 gem 'redis'
 gem 'bcrypt'
