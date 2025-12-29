@@ -1,0 +1,55 @@
+<!-- app/views/admin/users/index.html.erb -->
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+  <h1>Users</h1>
+  <%= link_to "New User", new_admin_user_path, class: "btn btn-primary" %>
+</div>
+
+<%= form_with url: admin_users_path, method: :get, class: "mb-3" do |f| %>
+  <div class="row">
+    <div class="col-md-8">
+      <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "Search by name or email..." %>
+    </div>
+    <div class="col-md-3">
+      <%= f.select :role, options_for_select([['All Roles', ''], ['User', 'user'], ['Admin', 'admin'], ['Super Admin', 'super_admin']], params[:role]), {}, class: "form-select" %>
+    </div>
+    <div class="col-md-1">
+      <%= f.submit "Search", class: "btn btn-outline-secondary w-100" %>
+    </div>
+  </div>
+<% end %>
+
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Sign In Count</th>
+        <th>Last Sign In</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= link_to user.full_name, admin_user_path(user) %></td>
+          <td><%= user.email %></td>
+          <td><span class="badge bg-<%= user.admin? ? 'danger' : 'primary' %>"><%= user.role.titleize %></span></td>
+          <td><%= user.sign_in_count %></td>
+          <td><%= user.last_sign_in_at&.strftime("%b %d, %Y") || 'Never' %></td>
+          <td>
+            <%= link_to "View", admin_user_path(user), class: "btn btn-sm btn-info" %>
+            <%= link_to "Edit", edit_admin_user_path(user), class: "btn btn-sm btn-warning" %>
+            <% unless user == current_user %>
+              <%= link_to "Delete", admin_user_path(user), method: :delete, 
+                          data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @users %>

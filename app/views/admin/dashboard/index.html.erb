@@ -1,2 +1,116 @@
-<h1>Admin::Dashboard#index</h1>
-<p>Find me in app/views/admin/dashboard/index.html.erb</p>
+<!-- app/views/admin/dashboard/index.html.erb -->
+<div class="mt-4">
+  <h1>Dashboard</h1>
+  <p class="text-muted">Organization: <%= current_organization.name %></p>
+
+  <!-- Statistics Cards -->
+  <div class="row mt-4">
+    <div class="col-md-3 mb-3">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <h5 class="card-title">Total Users</h5>
+          <h2><%= @stats[:total_users] %></h2>
+        </div>
+        <div class="card-footer">
+          <%= link_to "View All Users", admin_users_path, class: "text-white" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <h5 class="card-title">Service Providers</h5>
+          <h2><%= @stats[:total_service_providers] %></h2>
+        </div>
+        <div class="card-footer">
+          <%= link_to "View All SPs", admin_service_providers_path, class: "text-white" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card text-white bg-info">
+        <div class="card-body">
+          <h5 class="card-title">Active SPs</h5>
+          <h2><%= @stats[:active_service_providers] %></h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card text-white bg-warning">
+        <div class="card-body">
+          <h5 class="card-title">Recent Logins</h5>
+          <h2><%= @stats[:recent_logins].count %></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activities -->
+  <div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Recent Activities</h5>
+      <%= link_to "View All", admin_audit_logs_path, class: "btn btn-sm btn-outline-primary" %>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>User</th>
+              <th>Action</th>
+              <th>Resource</th>
+              <th>IP</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @stats[:recent_activities].each do |log| %>
+              <tr>
+                <td><%= time_ago_in_words(log.created_at) %> ago</td>
+                <td><%= log.user&.full_name || 'System' %></td>
+                <td><code><%= log.action %></code></td>
+                <td>
+                  <% if log.resource_type.present? %>
+                    <%= log.resource_type %>#<%= log.resource_id %>
+                  <% else %>
+                    -
+                  <% end %>
+                </td>
+                <td><code><%= log.ip_address %></code></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5 class="mb-0">Quick Actions</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <%= link_to admin_service_providers_path, class: "btn btn-lg btn-outline-primary w-100 mb-3" do %>
+            <i class="bi bi-plus-circle"></i> Add Service Provider
+          <% end %>
+        </div>
+        <div class="col-md-4">
+          <%= link_to new_admin_user_path, class: "btn btn-lg btn-outline-success w-100 mb-3" do %>
+            <i class="bi bi-person-plus"></i> Add User
+          <% end %>
+        </div>
+        <div class="col-md-4">
+          <%= link_to saml_metadata_path, class: "btn btn-lg btn-outline-info w-100 mb-3" do %>
+            <i class="bi bi-file-code"></i> View SAML Metadata
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
