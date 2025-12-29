@@ -1,0 +1,51 @@
+<!-- app/views/admin/service_providers/index.html.erb -->
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+  <h1>Service Providers</h1>
+  <%= link_to "New Service Provider", new_admin_service_provider_path, class: "btn btn-primary" %>
+</div>
+
+<!-- Search form -->
+<%= form_with url: admin_service_providers_path, method: :get, class: "mb-3" do |f| %>
+  <div class="input-group">
+    <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "Search by name or entity ID..." %>
+    <%= f.submit "Search", class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>
+
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Entity ID</th>
+        <th>ACS URL</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @service_providers.each do |sp| %>
+        <tr>
+          <td><%= link_to sp.name, admin_service_provider_path(sp) %></td>
+          <td><code><%= truncate(sp.entity_id, length: 40) %></code></td>
+          <td><code><%= truncate(sp.acs_url, length: 40) %></code></td>
+          <td>
+            <% if sp.active? %>
+              <span class="badge bg-success">Active</span>
+            <% else %>
+              <span class="badge bg-secondary">Inactive</span>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "View", admin_service_provider_path(sp), class: "btn btn-sm btn-info" %>
+            <%= link_to "Edit", edit_admin_service_provider_path(sp), class: "btn btn-sm btn-warning" %>
+            <%= link_to "Delete", admin_service_provider_path(sp), method: :delete, 
+                        data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= paginate @service_providers %>

@@ -1,0 +1,92 @@
+<!-- app/views/admin/service_providers/show.html.erb -->
+<div class="mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1><%= @service_provider.name %></h1>
+    <div>
+      <%= link_to "Edit", edit_admin_service_provider_path(@service_provider), class: "btn btn-warning" %>
+      <%= link_to "Toggle Status", toggle_status_admin_service_provider_path(@service_provider), 
+                  method: :patch, class: "btn btn-secondary" %>
+      <%= link_to "Back", admin_service_providers_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5>Details</h5>
+    </div>
+    <div class="card-body">
+      <dl class="row">
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">
+          <% if @service_provider.active? %>
+            <span class="badge bg-success">Active</span>
+          <% else %>
+            <span class="badge bg-secondary">Inactive</span>
+          <% end %>
+        </dd>
+
+        <dt class="col-sm-3">Entity ID</dt>
+        <dd class="col-sm-9"><code><%= @service_provider.entity_id %></code></dd>
+
+        <dt class="col-sm-3">ACS URL</dt>
+        <dd class="col-sm-9"><code><%= @service_provider.acs_url %></code></dd>
+
+        <dt class="col-sm-3">Metadata URL</dt>
+        <dd class="col-sm-9">
+          <% if @service_provider.metadata_url.present? %>
+            <code><%= @service_provider.metadata_url %></code>
+          <% else %>
+            <em>Not provided</em>
+          <% end %>
+        </dd>
+
+        <dt class="col-sm-3">Certificate</dt>
+        <dd class="col-sm-9">
+          <% if @service_provider.certificate.present? %>
+            <pre class="bg-light p-2"><%= @service_provider.certificate %></pre>
+          <% else %>
+            <em>Not provided</em>
+          <% end %>
+        </dd>
+
+        <dt class="col-sm-3">Created</dt>
+        <dd class="col-sm-9"><%= @service_provider.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+
+        <dt class="col-sm-3">Last Updated</dt>
+        <dd class="col-sm-9"><%= @service_provider.updated_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h5>Recent Authentications</h5>
+    </div>
+    <div class="card-body">
+      <% if @recent_authentications.any? %>
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>User</th>
+                <th>IP Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @recent_authentications.each do |log| %>
+                <tr>
+                  <td><%= log.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+                  <td><%= log.user&.full_name %></td>
+                  <td><code><%= log.ip_address %></code></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted">No authentication records yet.</p>
+      <% end %>
+    </div>
+  </div>
+</div
