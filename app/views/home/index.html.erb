@@ -1,0 +1,16 @@
+<div class="container mt-5">
+  <% if user_signed_in? %>
+    <h1>Welcome, <%= current_user.full_name %>!</h1>
+    <p>Organization: <%= current_organization.name %></p>
+    <p>Email: <%= current_user.email %></p>
+    
+    <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-danger" %>
+  <% else %>
+    <h1>SSO Identity Provider</h1>
+    <p>Please sign in to continue</p>
+    
+    <%= link_to "Sign In with Email", new_user_session_path, class: "btn btn-primary" %>
+    <%= link_to "Sign In with Google", user_google_oauth2_omniauth_authorize_path, 
+                method: :post, class: "btn btn-danger" %>
+  <% end %>
+</div>
