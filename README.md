@@ -91,10 +91,17 @@ The system supports:
 * ruby-saml (SAML)
 * Bootstrap (Admin UI)
 * Kaminari (Pagination)
+* Docker & Docker Compose (for development setup)
+* Redis (Background jobs, caching)
+* Elasticsearch (Search & indexing)
 
 ---
 
 ## ⚙️ Setup Instructions
+
+You can run the app either **directly on Rails** or **using Docker**.
+
+---
 
 ### 1️⃣ Clone the Repository
 
@@ -105,15 +112,59 @@ cd sso-identity-provider
 
 ---
 
-### 2️⃣ Install Dependencies
+### 2️⃣ Using Docker (Recommended)
+
+#### a) Build Docker Images
+
+```bash
+docker compose build
+```
+
+#### b) Start All Services
+
+```bash
+docker compose up
+```
+
+This will start:
+
+* Rails app → [http://localhost:3000](http://localhost:3000)
+* PostgreSQL → port 5432
+* Redis → port 6379
+* Elasticsearch → port 9200
+
+> The app waits for DB and Elasticsearch to be ready before starting.
+
+#### c) Run Rails Commands Inside Container
+
+```bash
+# Migrate the database
+docker compose run --rm app rails db:create db:migrate db:seed
+
+# Open Rails console
+docker compose run --rm app rails console
+```
+
+#### d) Stop Services
+
+```bash
+docker compose down
+```
+
+> Add `-v` to remove persistent volumes:
+> `docker compose down -v`
+
+---
+
+### 3️⃣ Without Docker (Local Setup)
+
+#### a) Install Dependencies
 
 ```bash
 bundle install
 ```
 
----
-
-### 3️⃣ Database Setup
+#### b) Database Setup
 
 ```bash
 rails db:create
@@ -121,9 +172,7 @@ rails db:migrate
 rails db:seed
 ```
 
----
-
-### 4️⃣ Start the Server
+#### c) Start the Rails Server
 
 ```bash
 rails s
@@ -216,5 +265,3 @@ Each log is scoped to:
 ## 📄 License
 
 MIT License
-
----

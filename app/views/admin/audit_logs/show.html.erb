@@ -1,0 +1,26 @@
+<!-- app/views/admin/audit_logs/show.html.erb -->
+<div class="mt-4">
+  <h1>Audit Log Details</h1>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <p><strong>Timestamp:</strong> <%= @audit_log.created_at.strftime("%Y-%m-%d %H:%M:%S") %></p>
+      <p><strong>User:</strong> <%= @audit_log.user&.full_name || 'System' %></p>
+      <p><strong>Action:</strong> <code><%= @audit_log.action %></code></p>
+      <p><strong>Resource:</strong>
+        <% if @audit_log.resource_type.present? %>
+          <%= @audit_log.resource_type %>#<%= @audit_log.resource_id %>
+        <% else %>
+          -
+        <% end %>
+      </p>
+      <p><strong>IP Address:</strong> <code><%= @audit_log.ip_address %></code></p>
+      <% if @audit_log.changes.present? %>
+        <p><strong>Changes:</strong></p>
+        <pre><%= JSON.pretty_generate(@audit_log.changes) %></pre>
+      <% end %>
+    </div>
+  </div>
+
+  <%= link_to "Back to Audit Logs", admin_audit_logs_path, class: "btn btn-secondary" %>
+</div>

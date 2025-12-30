@@ -1,25 +1,35 @@
-# Dockerfile
 FROM ruby:2.7.7
 
-# Install dependencies
+ENV RUBYOPT="-W0"
+
+# System deps
 RUN apt-get update -qq && apt-get install -y \
-    nodejs \
+    curl \
     postgresql-client \
     build-essential \
-    libpq-dev
+    libpq-dev \
+    nodejs \
+    npm
 
-# Set working directory
+# Yarn
+RUN npm install -g yarn
+
 WORKDIR /app
 
-# Install gems
-COPY Gemfile Gemfile.lock ./
-RUN bundle install
+# Bundler
+RUN gem install bundler -v 2.2.20
 
-# Copy application
+# Ruby deps
+COPY Gemfile Gemfile.lock ./
+RUN bundle _2.2.20_ install
+
+# JS deps
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+# App code
 COPY . .
 
-# Expose port
 EXPOSE 3000
 
-# Start server
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

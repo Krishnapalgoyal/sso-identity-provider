@@ -2,42 +2,37 @@
 module Admin
   class AuditLogsController < BaseController
     def index
-      @audit_logs = if params[:query].present?
-        # Use Searchkick if available
+      @audit_logs = AuditLog.all
+
+      # Search query
+      if params[:query].present?
         if AuditLog.respond_to?(:search)
-          AuditLog.search(
+          @audit_logs = AuditLog.search(
             params[:query],
             fields: [:action, :resource_type, :user_email],
             page: params[:page],
             per_page: 50
           )
         else
-          # Fallback to SQL search
-          AuditLog.where(
-            'action ILIKE ? OR resource_type ILIKE ?',
-            "%#{params[:query]}%",
-            "%#{params[:query]}%"
-          ).recent.page(params[:page]).per(50)
+          @audit_logs = @audit_logs.where(
+            'action ILIKE :q OR resource_type ILIKE :q',
+            q: "%#{params[:query]}%"
+          )
         end
-      else
-        AuditLog.recent.page(params[:page]).per(50)
       end
-      
+
       # Filter by action
-      @audit_logs = @audit_logs.where(action: params[:action]) if params[:action].present?
-      
+      @audit_logs = @audit_logs.where(action: params[:action_filter]) if params[:action_filter].present?
       # Filter by user
       @audit_logs = @audit_logs.where(user_id: params[:user_id]) if params[:user_id].present?
-      
       # Filter by date range
-      if params[:start_date].present?
-        @audit_logs = @audit_logs.where('created_at >= ?', params[:start_date])
-      end
-      
-      if params[:end_date].present?
-        @audit_logs = @audit_logs.where('created_at <= ?', params[:end_date])
-      end
+      @audit_logs = @audit_logs.where('created_at >= ?', Date.parse(params[:start_date])) if params[:start_date].present?
+      @audit_logs = @audit_logs.where('created_at <= ?', Date.parse(params[:end_date])) if params[:end_date].present?
+
+      # Order & paginate
+      @audit_logs = @audit_logs.order(created_at: :desc).page(params[:page]).per(50)
     end
+
 
     def show
       @audit_log = AuditLog.find(params[:id])
