@@ -1,0 +1,61 @@
+<div class="mt-4 text-center">
+
+  <% if controller_name != 'sessions' %>
+    <div class="mb-2">
+      <%= link_to "Log in",
+            new_session_path(resource_name),
+            class: "link-primary text-decoration-none fw-semibold" %>
+    </div>
+  <% end %>
+
+  <% if devise_mapping.registerable? && controller_name != 'registrations' %>
+    <div class="mb-2">
+      <%= link_to "Sign up",
+            new_registration_path(resource_name),
+            class: "link-primary text-decoration-none fw-semibold" %>
+    </div>
+  <% end %>
+
+  <% if devise_mapping.recoverable? &&
+        controller_name != 'passwords' &&
+        controller_name != 'registrations' %>
+    <div class="mb-2">
+      <%= link_to "Forgot your password?",
+            new_password_path(resource_name),
+            class: "link-secondary text-decoration-none" %>
+    </div>
+  <% end %>
+
+  <% if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+    <div class="mb-2">
+      <%= link_to "Didn't receive confirmation instructions?",
+            new_confirmation_path(resource_name),
+            class: "link-secondary text-decoration-none" %>
+    </div>
+  <% end %>
+
+  <% if devise_mapping.lockable? &&
+        resource_class.unlock_strategy_enabled?(:email) &&
+        controller_name != 'unlocks' %>
+    <div class="mb-2">
+      <%= link_to "Didn't receive unlock instructions?",
+            new_unlock_path(resource_name),
+            class: "link-secondary text-decoration-none" %>
+    </div>
+  <% end %>
+
+  <% if devise_mapping.omniauthable? %>
+    <hr class="my-4">
+
+    <% resource_class.omniauth_providers.each do |provider| %>
+      <%= button_to omniauth_authorize_path(resource_name, provider),
+            method: :post,
+            data: { turbo: false },
+            class: "btn btn-outline-danger w-100 mb-2" do %>
+        <i class="bi bi-google me-2"></i>
+        Continue with <%= OmniAuth::Utils.camelize(provider) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+</div>

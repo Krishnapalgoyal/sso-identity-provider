@@ -1,63 +1,66 @@
-<!-- app/views/admin/dashboard/index.html.erb -->
-<div class="mt-4">
-  <h1>Dashboard</h1>
-  <p class="text-muted">Organization: <%= current_organization.name %></p>
+<div class="container mt-5">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2">Dashboard</h1>
+    <p class="text-muted mb-0">Organization: <strong><%= current_organization.name %></strong></p>
+  </div>
 
   <!-- Statistics Cards -->
-  <div class="row mt-4">
-    <div class="col-md-3 mb-3">
-      <div class="card text-white bg-primary">
-        <div class="card-body">
+  <div class="row g-3">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary h-100 shadow-sm">
+        <div class="card-body text-center">
           <h5 class="card-title">Total Users</h5>
-          <h2><%= @stats[:total_users] %></h2>
+          <h2 class="display-6"><%= @stats[:total_users] %></h2>
         </div>
-        <div class="card-footer">
-          <%= link_to "View All Users", admin_users_path, class: "text-white" %>
+        <div class="card-footer text-center bg-primary">
+          <%= link_to "View All Users", admin_users_path, class: "text-white text-decoration-none fw-semibold" %>
         </div>
       </div>
     </div>
 
-    <div class="col-md-3 mb-3">
-      <div class="card text-white bg-success">
-        <div class="card-body">
+    <div class="col-md-3">
+      <div class="card text-white bg-success h-100 shadow-sm">
+        <div class="card-body text-center">
           <h5 class="card-title">Service Providers</h5>
-          <h2><%= @stats[:total_service_providers] %></h2>
+          <h2 class="display-6"><%= @stats[:total_service_providers] %></h2>
         </div>
-        <div class="card-footer">
-          <%= link_to "View All SPs", admin_service_providers_path, class: "text-white" %>
+        <div class="card-footer text-center bg-success">
+          <%= link_to "View All SPs", admin_service_providers_path, class: "text-white text-decoration-none fw-semibold" %>
         </div>
       </div>
     </div>
 
-    <div class="col-md-3 mb-3">
-      <div class="card text-white bg-info">
-        <div class="card-body">
+    <div class="col-md-3">
+      <div class="card text-white bg-info h-100 shadow-sm">
+        <div class="card-body text-center">
           <h5 class="card-title">Active SPs</h5>
-          <h2><%= @stats[:active_service_providers] %></h2>
+          <h2 class="display-6"><%= @stats[:active_service_providers] %></h2>
         </div>
       </div>
     </div>
 
-    <div class="col-md-3 mb-3">
-      <div class="card text-white bg-warning">
-        <div class="card-body">
+    <div class="col-md-3">
+      <div class="card text-white bg-warning h-100 shadow-sm">
+        <div class="card-body text-center">
           <h5 class="card-title">Recent Logins</h5>
-          <h2><%= @stats[:recent_logins].count %></h2>
+          <h2 class="display-6"><%= @stats[:recent_logins].count %></h2>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Recent Activities -->
-  <div class="card mt-4">
+  <div class="card mt-4 shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Recent Activities</h5>
       <%= link_to "View All", admin_audit_logs_path, class: "btn btn-sm btn-outline-primary" %>
     </div>
-    <div class="card-body">
+    <div class="card-body p-0">
       <div class="table-responsive">
-        <table class="table table-sm">
-          <thead>
+        <table class="table table-striped table-hover mb-0">
+          <thead class="table-light">
             <tr>
               <th>Time</th>
               <th>User</th>
@@ -72,13 +75,7 @@
                 <td><%= time_ago_in_words(log.created_at) %> ago</td>
                 <td><%= log.user&.full_name || 'System' %></td>
                 <td><code><%= log.action %></code></td>
-                <td>
-                  <% if log.resource_type.present? %>
-                    <%= log.resource_type %>#<%= log.resource_id %>
-                  <% else %>
-                    -
-                  <% end %>
-                </td>
+                <td><%= log.resource_type.present? ? "#{log.resource_type}##{log.resource_id}" : "-" %></td>
                 <td><code><%= log.ip_address %></code></td>
               </tr>
             <% end %>
@@ -89,28 +86,29 @@
   </div>
 
   <!-- Quick Actions -->
-  <div class="card mt-4">
+  <div class="card mt-4 shadow-sm">
     <div class="card-header">
       <h5 class="mb-0">Quick Actions</h5>
     </div>
     <div class="card-body">
-      <div class="row">
+      <div class="row g-3">
         <div class="col-md-4">
-          <%= link_to admin_service_providers_path, class: "btn btn-lg btn-outline-primary w-100 mb-3" do %>
-            <i class="bi bi-plus-circle"></i> Add Service Provider
+          <%= link_to admin_service_providers_path, class: "btn btn-outline-primary w-100 py-3" do %>
+            <i class="bi bi-plus-circle me-2"></i> Add Service Provider
           <% end %>
         </div>
         <div class="col-md-4">
-          <%= link_to new_admin_user_path, class: "btn btn-lg btn-outline-success w-100 mb-3" do %>
-            <i class="bi bi-person-plus"></i> Add User
+          <%= link_to new_admin_user_path, class: "btn btn-outline-success w-100 py-3" do %>
+            <i class="bi bi-person-plus me-2"></i> Add User
           <% end %>
         </div>
         <div class="col-md-4">
-          <%= link_to saml_metadata_path, class: "btn btn-lg btn-outline-info w-100 mb-3" do %>
-            <i class="bi bi-file-code"></i> View SAML Metadata
+          <%= link_to saml_metadata_path, class: "btn btn-outline-info w-100 py-3" do %>
+            <i class="bi bi-file-code me-2"></i> View SAML Metadata
           <% end %>
         </div>
       </div>
     </div>
   </div>
+
 </div>

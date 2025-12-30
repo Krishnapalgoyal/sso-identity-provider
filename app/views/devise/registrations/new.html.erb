@@ -1,0 +1,93 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+
+          <h3 class="text-center mb-4">Create your account</h3>
+
+          <%= form_for(resource,
+                       as: resource_name,
+                       url: registration_path(resource_name),
+                       html: { class: "needs-validation" }) do |f| %>
+
+            <%= render "devise/shared/error_messages", resource: resource %>
+
+            <!-- USER DETAILS -->
+            <h5 class="mb-3">User Details</h5>
+
+            <div class="mb-3">
+              <%= f.label :email, class: "form-label" %>
+              <%= f.email_field :email,
+                                class: "form-control",
+                                autofocus: true,
+                                autocomplete: "email",
+                                placeholder: "you@example.com" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :password, class: "form-label" %>
+              <% if @minimum_password_length %>
+                <small class="text-muted">
+                  (<%= @minimum_password_length %> characters minimum)
+                </small>
+              <% end %>
+              <%= f.password_field :password,
+                                   class: "form-control",
+                                   autocomplete: "new-password",
+                                   placeholder: "••••••••" %>
+            </div>
+
+            <div class="mb-4">
+              <%= f.label :password_confirmation, class: "form-label" %>
+              <%= f.password_field :password_confirmation,
+                                   class: "form-control",
+                                   autocomplete: "new-password",
+                                   placeholder: "••••••••" %>
+            </div>
+
+            <!-- ORGANIZATION DETAILS -->
+            <hr>
+            <h5 class="mb-3">Organization Details</h5>
+
+            <%= fields_for :organization do |o| %>
+              <div class="mb-3">
+                <%= o.label :name, "Organization Name", class: "form-label" %>
+                <%= o.text_field :name,
+                                 class: "form-control",
+                                 placeholder: "Acme Corporation",
+                                 required: true %>
+              </div>
+
+              <div class="mb-4">
+                <%= o.label :subdomain, "Organization Subdomain", class: "form-label" %>
+                <div class="input-group">
+                  <%= o.text_field :subdomain,
+                                   class: "form-control",
+                                   placeholder: "acme",
+                                   required: true %>
+                  <span class="input-group-text">.yourdomain.com</span>
+                </div>
+                <small class="text-muted">
+                  Lowercase letters, numbers, and hyphens only
+                </small>
+              </div>
+            <% end %>
+
+            <!-- SUBMIT -->
+            <div class="d-grid">
+              <%= f.submit "Create Account",
+                           class: "btn btn-primary btn-lg" %>
+            </div>
+
+          <% end %>
+
+          <div class="text-center mt-3">
+            <%= render "devise/shared/links" %>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
